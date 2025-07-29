@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VPN Desktop Windowed</title>
+  <style>
+    :root {
+      --bg-color: #d0d3d6;
+      --app-bg: #fff;
+      --text-color: #222;
+      --nav-link: #444;
+      --nav-active-bg: #444;
+      --nav-active-color: #fff;
+      --border-color: #ddd;
+      --server-border: #eee;
+      --input-border: #ccc;
+      --green: #28a745;
+      --orange: #ff9800;
+    }
+    [data-theme="dark"] {
+      --bg-color: #121212;
+      --app-bg: #1e1e1e;
+      --text-color: #f0f0f0;
+      --nav-link: #ccc;
+      --nav-active-bg: #28a745;
+      --nav-active-color: #fff;
+      --border-color: #333;
+      --server-border: #333;
+      --input-border: #555;
+    }
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      background: var(--bg-color);
+      color: var(--text-color);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .app-window {
+      width: 1024px;
+      height: 680px;
+      background: var(--app-bg);
+      border-radius: 18px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    header {
+      background: var(--app-bg);
+      padding: 15px 30px;
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .logo {
+      width: 32px;
+      height: 32px;
+      background: var(--text-color);
+      border-radius: 50%;
+      margin-right: 20px;
+    }
+    nav a {
+      margin-right: 20px;
+      text-decoration: none;
+      color: var(--nav-link);
+      font-weight: 500;
+      padding: 6px 12px;
+      border-radius: 6px;
+    }
+    nav a.active {
+      background: var(--nav-active-bg);
+      color: var(--nav-active-color);
+    }
+    .container {
+      flex: 1;
+      display: flex;
+      overflow: hidden;
+    }
+    .left {
+      flex: 2;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(#e6f1f5, #f9fbfc);
+    }
+    .left h1 {
+      font-size: 28px;
+      margin-bottom: 20px;
+    }
+    .btn {
+      background: white;
+      border: 2px solid var(--nav-link);
+      font-size: 18px;
+      padding: 10px 30px;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+    .location-box {
+      margin-top: 40px;
+      background: #000;
+      color: white;
+      padding: 15px 25px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .right {
+      flex: 3;
+      background: var(--app-bg);
+      padding: 30px;
+      overflow-y: auto;
+      border-left: 1px solid var(--server-border);
+    }
+    .right h2 {
+      margin-bottom: 10px;
+    }
+    .server-list {
+      border-top: 1px solid var(--input-border);
+      margin-top: 15px;
+      max-height: 80%;
+      overflow-y: auto;
+    }
+    .server {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--server-border);
+      font-size: 16px;
+    }
+    .ping { font-weight: bold; }
+    .green { color: var(--green); }
+    .orange { color: var(--orange); }
+    .settings-page {
+      padding: 40px;
+      flex: 1;
+      overflow-y: auto;
+    }
+    .setting-item {
+      margin-bottom: 30px;
+    }
+    .setting-item h3 {
+      margin: 0;
+      font-size: 18px;
+    }
+    .setting-item p {
+      color: #666;
+      margin: 5px 0 0 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-window">
+    <header>
+      <div class="logo"></div>
+      <nav>
+        <a href="#" class="active" onclick="showPage('home')">Главная</a>
+        <a href="#" onclick="showPage('exclusions')">Исключения</a>
+        <a href="#" onclick="showPage('stats')">Статистика</a>
+        <a href="#" onclick="showPage('support')">Поддержка</a>
+        <a href="#" onclick="showPage('settings')">Настройки</a>
+      </nav>
+    </header>
+
+    <!-- Главная -->
+    <div id="home" class="container">
+      <div class="left">
+        <h1>Подключён</h1>
+        <button class="btn">Отключить</button>
+        <div class="location-box">
+          <span>🇷🇺</span>
+          <div>
+            <div>Россия</div>
+            <small>Смоленск</small>
+          </div>
+          <strong style="margin-left:auto;">58 мс</strong>
+        </div>
+      </div>
+      <div class="right">
+        <h2>Список серверов</h2>
+        <input type="text" placeholder="Поиск..." style="width:100%; padding:10px; margin:10px 0; border:1px solid var(--input-border); border-radius:5px;" />
+        <div class="server-list">
+          <div class="server"><span>🇦🇹 Австрия — Вена</span><span class="ping green">33 мс</span></div>
+          <div class="server"><span>🇦🇷 Аргентина — Буэнос-Айрес</span><span class="ping orange">384 мс</span></div>
+          <div class="server"><span>🇧🇪 Бельгия — Брюссель</span><span class="ping green">50 мс</span></div>
+          <div class="server"><span>🇧🇬 Болгария — София</span><span class="ping green">46 мс</span></div>
+          <div class="server"><span>🇧🇷 Бразилия — Сан-Паулу</span><span class="ping orange">335 мс</span></div>
+          <div class="server"><span>🇬🇧 Великобритания — Лондон</span><span class="ping green">61 мс</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Exclusions -->
+    <div id="exclusions" class="container" style="display:none;">
+      <div class="settings-page">
+        <h2>Приложения</h2>
+        <p>VPN работает <span style="color: var(--green);">везде</span> 📎, кроме этих приложений</p>
+        <button style="background:none;border:none;color:var(--green);font-size:16px;margin:20px 0 10px;cursor:pointer;">+ Добавить</button>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:20px;">
+          <input type="text" placeholder="Поиск" style="padding:8px 12px;border:1px solid var(--input-border);border-radius:5px;width:300px;" />
+          <span style="color:var(--nav-link);">Удалить все</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Statistics -->
+    <div id="stats" class="container" style="display:none;flex-direction:column;padding:40px;overflow-y:auto;">
+      <h2>Статистика для этого Mac</h2>
+      <p style="color:#666;">7 дней (22 июл. 2025 г. – 29 июл. 2025 г.)</p>
+      <div style="margin:30px 0;">
+        <h3>Трафик</h3>
+        <div style="display:flex;gap:40px;font-size:24px;font-weight:bold;">
+          <span class="green">8.8 ГБ</span>
+          <span style="color:#666;">5.99 ГБ</span>
+        </div>
+        <div style="height:5px;background:#ccc;border-radius:2px;margin-top:8px;display:flex;">
+          <div style="background:#28a745;width:60%;"></div>
+          <div style="background:#888;width:40%;"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:14px;margin-top:4px;">
+          <span class="green">скачано</span>
+          <span style="color:#666;">отправлено</span>
+        </div>
+      </div>
+      <div>
+        <h3>Популярные локации</h3>
+        <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+          <span>🇷🇺 Россия (Смоленск)</span>
+          <span style="color:#666;">↓ 7.97 ГБ ↑ 5.95 ГБ</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;">
+          <span>🇺🇸 США (Котлас)</span>
+          <span style="color:#666;">↓ 844 МБ ↑ 42 МБ</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Support -->
+    <div id="support" class="container" style="display:none;flex-direction:column;padding:40px;overflow-y:auto;">
+      <h2>Поддержка</h2>
+      <div style="margin-top:30px;">
+        <div style="margin-bottom:20px;"><strong>❓ FAQ</strong><br><small style="color:#888;">Часто задаваемые вопросы</small></div>
+        <div style="margin-bottom:20px;"><strong>🪲 Сообщить об ошибке</strong><br><small style="color:#888;">Отправить отчёт о технических проблемах</small></div>
+        <div><strong>✉️ Оставить отзыв</strong><br><small style="color:#888;">Отправить запросы на новые функции и предложения</small></div>
+      </div>
+    </div>
+
+    <!-- Settings -->
+    <div id="settings" class="container" style="display:none;">
+      <div class="settings-page">
+        <h2>Настройки</h2>
+        
+        <div class="setting-item">
+          <h3>Аккаунт</h3>
+          <p>Управление аккаунтом и подпиской</p>
+        </div>
+        <div class="setting-item">
+          <h3>О программе</h3>
+          <p>Версия приложения и обновления</p>
+        </div>
+        <div class="setting-item">
+          <h3>Язык</h3>
+          <select>
+            <option value=\"ru\">Русский</option>
+            <option value=\"en\">English</option>
+          </select>
+        </div>
+        <div class="setting-item">
+          <h3>Тема</h3>
+          <button onclick="toggleTheme()">Сменить тему</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function showPage(page) {
+      ['home', 'exclusions', 'stats', 'support', 'settings'].forEach(id => {
+        document.getElementById(id).style.display = page === id ? 'flex' : 'none';
+      });
+      document.querySelectorAll('nav a').forEach(link => link.classList.remove('active'));
+      const navMap = { home: 0, exclusions: 1, stats: 2, support: 3, settings: 4 };
+      document.querySelectorAll('nav a')[navMap[page]].classList.add('active');
+    }
+    function toggleTheme() {
+      const current = document.documentElement.getAttribute('data-theme');
+      document.documentElement.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
+    }
+    document.documentElement.setAttribute('data-theme', 'light');
+  </script>
+</body>
+</html>
